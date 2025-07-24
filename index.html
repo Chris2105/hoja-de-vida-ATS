@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hojas de vida ATS</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Generador de Hojas de Vida ATS</h1>
+            <p>Crea tu hoja de vida optimizado para sistemas de seguimiento de candidatos</p>
+        </header>
+
+        <main>
+            <!-- Formulario de entrada -->
+            <section id="form-section" class="form-section">
+                <form id="cv-form">
+                    <!-- Datos Básicos -->
+                    <div class="form-group">
+                        <h2>Datos Básicos</h2>
+                        <div class="input-row">
+                            <input type="text" id="fullName" placeholder="Nombre Completo" required>
+                            <input type="text" id="address" placeholder="Dirección completa" required>
+                        </div>
+                        <div class="input-row">
+                            <input type="tel" id="phone" placeholder="Teléfono" required>
+                            <input type="email" id="email" placeholder="Correo Electrónico" required>
+                        </div>
+                        <div class="input-row">
+                            <input type="url" id="linkedin" placeholder="linkedinLinkedIn (opcional)">
+                            <input type="url" id="portfolio" placeholder="Portafolio/GitHub (opcional)">
+                        </div>
+                    </div>
+                    <!-- Perfil Profesional -->
+                    <div class="form-group">
+                        <h2>Perfil Profesional</h2>
+                        <textarea id="professionalProfile"
+                            placeholder="Describe tu perfil profesional, objetivos y fortalezas..." rows="4"></textarea>
+                    </div>
+                    <!-- Formación Académica -->
+                    <div class="form-group">
+                        <h2>Formación Académica</h2>
+                        <div id="education-container">
+                            <div class="education-item">
+                                <div class="input-row">
+                                    <input type="text" class="institution" placeholder="Institución">
+                                    <input type="text" class="degree" placeholder="Título Obtenido">
+                                </div>
+                                <div class="input-row">
+                                    <input type="date" class="start-date" placeholder="Fecha de Inicio">
+                                    <input type="date" class="end-date" placeholder="Fecha de Finalización">
+                                    <select class="status">
+                                        <option value="completado">Completado</option>
+                                        <option value="en-curso">En Curso</option>
+                                        <option value="aplazado">Aplazado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-education" class="add-btn">Agregar Formacion</button>
+                    </div>
+                    <!-- Otros Cursos -->
+                    <div class="form-group">
+                        <h2>Otros Cursos y Estudios</h2>
+                        <div id="courses-container">
+                            <div class="course-item">
+                                <div class="input-row">
+                                    <input type="text" , class="course-institution" placeholder="Institución">
+                                    <input type="text" class="course-name" placeholder="Nombre del Curso">
+                                </div>
+                                <div class="input-row">
+                                    <input type="date" class="course-start-date" placeholder="Fecha de Inicio">
+                                    <input type="date" class="course-end-date" placeholder="Fecha de Finalización">
+                                    <select class="course-status">
+                                        <option value="completado">Completado</option>
+                                        <option value="en-curso">En Curso</option>
+                                        <option value="aplazado">Aplazado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-course" class="add-btn">Agregar Curso</button>
+                    </div>
+                    <!-- Experiencia Laboral -->
+                    <div class="form-group">
+                        <h2>Experiencia Laboral</h2>
+                        <div id="experience-container">
+                            <div class="experience-item">
+                                <div class="input-row">
+                                    <input type="text" class="company" placeholder="Nombre de la Empresa">
+                                    <input type="text" class="position" placeholder="Cargo">
+                                </div>
+                                <div class="input-row">
+                                    <input type="date" class="exp-start-date" placeholder="Fecha de Inicio">
+                                    <input type="date" class="exp-end-date" placeholder="Fecha de Finalización">
+                                </div>
+                                <textarea class="functions" placeholder="Funciones y logros principales..."
+                                    rows="3"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" id="add-experience" class="add-btn">Agregar Experiencia</button>
+                    </div>
+                    <!-- Firma -->
+                    <div class="form-group">
+                        <h2>Firma (Opcional)</h2>
+                        <input type="file" id="signature" accept="image/*">
+                        <div id="signature-preview"></div>
+                    </div>
+                    <!-- Datos de Identificación -->
+                    <div class="form-group">
+                        <h2>Datos de Identificación</h2>
+                        <div class="input-row">
+                            <select id="docType" required>
+                                <option value="">Tipo de documento</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="CE">Cédula de Extranjeria</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="PP">Pasaporte</option>
+                            </select>
+                            <input type="text" id="docNumber" placeholder="Número de documento" required>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="generate-btn">Generar Hoja de Vida</button>
+                        <button type="button" id="clear-form" class="clear-btn">Limpiar Formulario</button>
+                    </div>
+                </form>
+            </section>
+            <!-- Vista previa del CV -->
+             <section id="cv-preview" class="cv-preview hidden">
+                <div class="cv-actions">
+                    <button id="edit-cv" class="edit-btn">Editar</button>
+                    <button id="download-cv" class="download-btn">Descargar PDF</button>
+                    <button id="print-cv" class="print-btn">Imprimir</button>
+                </div>
+                <div id="cv-content" class="cv-content">
+                    <!-- Aquí se generará el CV -->
+                </div>
+             </section>
+        </main>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,504 @@
+/* Reset y variables */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --light-gray: #f8fafc;
+  --medium-gray: #e2e8f0;
+  --dark-gray: #334155;
+  --white: #ffffff;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* Estilos generales */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-gray);
+  background-color: var(--light-gray);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+  color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Formulario */
+.form-section {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.form-group:last-child {
+  border-bottom: none;
+}
+
+.form-group h2 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-row.single {
+  grid-template-columns: 1fr;
+}
+
+input,
+textarea,
+select {
+  padding: 0.75rem;
+  border: 2px solid var(--medium-gray);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea{
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Botones */
+.add-btn,
+.generate-btn,
+.clear-btn,
+.edit-btn,
+.download-btn,
+.print-btn{
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-btn{
+    background-color: var(--success-color);
+    color: var(--white);
+    margin-top: 1rem;
+}
+
+.add-btn:hover{
+    background-color: #059669;
+    transform: translateY(-2px);
+}
+
+.generate-btn{
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+}
+
+.generate-btn:hover{
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.clear-btn{
+    background-color: var(--danger-color);
+    color: var(--white);
+}
+
+.clear-btn:hover{
+    background-color: #dc2626;
+}
+
+.form-actions{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--medium-gray);
+}
+
+/* Items dinámicos */
+.education-item,
+.course-item,
+.experience-item{
+    background-color: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.remove-btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--danger-color);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Preview de firma */
+#signature-preview{
+    margin-top: 1rem;
+}
+
+#signature-preview img {
+  max-width: 200px;
+  max-height: 100px;
+  border: 2px solid var(--medium-gray);
+  border-radius: var(--border-radius);
+}
+
+/* CV Preview */
+.cv-preview {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.cv-actions {
+  background-color: var(--light-gray);
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.edit-btn {
+  background-color: var(--warning-color);
+  color: var(--white);
+}
+
+.download-btn {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+.print-btn {
+  background-color: var(--secondary-color);
+  color: var(--white);
+}
+
+.edit-btn:hover {
+  background-color: #d97706;
+}
+
+.download-btn:hover {
+  background-color: #059669;
+}
+
+.print-btn:hover {
+  background-color: #475569;
+}
+
+/* Contenido del CV */
+.cv-content {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--white);
+  font-family: "Times New Roman", serif;
+  line-height: 1.4;
+  color: #000;
+}
+
+.cv-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #000;
+}
+
+.cv-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cv-contact {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.cv-section {
+  margin-bottom: 1.5rem;
+}
+
+.cv-section h2 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.cv-item {
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.cv-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.3rem;
+}
+
+.cv-item-title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.cv-item-subtitle {
+  font-style: italic;
+  color: #333;
+}
+
+.cv-item-date {
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.cv-item-description {
+  margin-top: 0.5rem;
+  text-align: justify;
+}
+
+.cv-signature {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.cv-signature img {
+  max-width: 150px;
+  max-height: 75px;
+  margin-bottom: 1rem;
+}
+
+.signature-line {
+  border-top: 1px solid #000;
+  width: 200px;
+  margin: 1rem auto 0.5rem;
+}
+
+/* Utilidades */
+.hidden {
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cv-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cv-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cv-item-date {
+    margin-top: 0.3rem;
+  }
+}
+
+/* Estilos para impresión */
+@media print {
+  body {
+    background: white;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  header,
+  .form-section,
+  .cv-actions {
+    display: none;
+  }
+
+  .cv-preview {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .cv-content {
+    padding: 0;
+    max-width: none;
+    font-size: 12pt;
+  }
+
+  .cv-section {
+    page-break-inside: avoid;
+  }
+
+  .cv-item {
+    page-break-inside: avoid;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cv-preview {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Estados de validación */
+input:invalid {
+  border-color: var(--danger-color);
+}
+
+input:valid {
+  border-color: var(--success-color);
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
