@@ -1,149 +1,465 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hojas de vida ATS</title>
+    <meta name="description" content="Generador de hojas de vida optimizadas para ATS">
+    <title>Generador de CV ATS - Crea tu hoja de vida profesional</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Librerías para PDF y funcionalidades avanzadas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Librerías para generar documentos Word REALES -->
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
-
 <body>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Generando tu CV...</p>
+        </div>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>Generador de Hojas de Vida ATS</h1>
-            <p>Crea tu hoja de vida optimizado para sistemas de seguimiento de candidatos</p>
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🚀 Generador de CV ATS</h1>
+                <p>Crea tu hoja de vida optimizada para sistemas de seguimiento de candidatos</p>
+                <div class="header-stats">
+                    <span class="stat">✅ Optimizado ATS</span>
+                    <span class="stat">📱 Responsive</span>
+                    <span class="stat">🎨 Profesional</span>
+                </div>
+            </div>
         </header>
 
-        <main>
-            <!-- Formulario de entrada -->
+        <!-- Barra de herramientas superior -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button id="theme-toggle" class="btn btn-icon" title="Cambiar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="auto-save-toggle" class="btn btn-icon active" title="Guardado automático">
+                    <span>💾</span>
+                </button>
+                <span id="save-status" class="save-status">Guardado automático activado</span>
+            </div>
+            <div class="toolbar-right">
+                <button id="import-data" class="btn btn-secondary">
+                    <span>📁</span> Importar Datos
+                </button>
+                <button id="export-data" class="btn btn-secondary">
+                    <span>📤</span> Exportar Datos
+                </button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <span id="progress-text" class="progress-text">0% completado</span>
+            </div>
+
+            <!-- Formulario Principal -->
             <section id="form-section" class="form-section">
-                <form id="cv-form">
+                <form id="cv-form" class="cv-form" novalidate>
+                    
                     <!-- Datos Básicos -->
-                    <div class="form-group">
-                        <h2>Datos Básicos</h2>
-                        <div class="input-row">
-                            <input type="text" id="fullName" placeholder="Nombre Completo" required>
-                            <input type="text" id="address" placeholder="Dirección completa" required>
+                    <div class="form-group" data-step="1">
+                        <div class="form-group-header">
+                            <h2>📋 Datos Básicos</h2>
+                            <span class="required-indicator">* Campos obligatorios</span>
                         </div>
-                        <div class="input-row">
-                            <input type="tel" id="phone" placeholder="Teléfono" required>
-                            <input type="email" id="email" placeholder="Correo Electrónico" required>
-                        </div>
-                        <div class="input-row">
-                            <input type="url" id="linkedin" placeholder="linkedinLinkedIn (opcional)">
-                            <input type="url" id="portfolio" placeholder="Portafolio/GitHub (opcional)">
+                        
+                        <div class="input-grid">
+                            <div class="input-container">
+                                <label for="fullName">Nombre Completo *</label>
+                                <input type="text" id="fullName" name="fullName" required 
+                                       placeholder="Ej: Juan Carlos Pérez García"
+                                       autocomplete="name">
+                                <div class="error-message" id="fullName-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="address">Dirección Completa *</label>
+                                <input type="text" id="address" name="address" required 
+                                       placeholder="Ej: Calle 123 #45-67, Bogotá, Colombia"
+                                       autocomplete="street-address">
+                                <div class="error-message" id="address-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="phone">Teléfono *</label>
+                                <input type="tel" id="phone" name="phone" required 
+                                       placeholder="Ej: +57 300 123 4567"
+                                       autocomplete="tel">
+                                <div class="error-message" id="phone-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="email">Correo Electrónico *</label>
+                                <input type="email" id="email" name="email" required 
+                                       placeholder="Ej: juan.perez@email.com"
+                                       autocomplete="email">
+                                <div class="error-message" id="email-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="linkedin">LinkedIn (Opcional)</label>
+                                <input type="url" id="linkedin" name="linkedin" 
+                                       placeholder="Ej: https://linkedin.com/in/tu-perfil">
+                                <div class="error-message" id="linkedin-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="portfolio">Portafolio/GitHub (Opcional)</label>
+                                <input type="url" id="portfolio" name="portfolio" 
+                                       placeholder="Ej: https://github.com/tu-usuario">
+                                <div class="error-message" id="portfolio-error"></div>
+                            </div>
                         </div>
                     </div>
+
                     <!-- Perfil Profesional -->
-                    <div class="form-group">
-                        <h2>Perfil Profesional</h2>
-                        <textarea id="professionalProfile"
-                            placeholder="Describe tu perfil profesional, objetivos y fortalezas..." rows="4"></textarea>
+                    <div class="form-group" data-step="2">
+                        <div class="form-group-header">
+                            <h2>👤 Perfil Profesional</h2>
+                            <span class="help-text">Describe tu experiencia y objetivos profesionales</span>
+                        </div>
+                        
+                        <div class="input-container">
+                            <label for="professionalProfile">Perfil Profesional</label>
+                            <textarea id="professionalProfile" name="professionalProfile" 
+                                      rows="4"
+                                      placeholder="Ej: Profesional en ingeniería de sistemas con 5 años de experiencia en desarrollo web. Especializado en tecnologías frontend y backend, con habilidades en liderazgo de equipos y gestión de proyectos..."></textarea>
+                            <div class="error-message" id="professionalProfile-error"></div>
+                        </div>
                     </div>
+
                     <!-- Formación Académica -->
-                    <div class="form-group">
-                        <h2>Formación Académica</h2>
-                        <div id="education-container">
-                            <div class="education-item">
-                                <div class="input-row">
-                                    <input type="text" class="institution" placeholder="Institución">
-                                    <input type="text" class="degree" placeholder="Título Obtenido">
+                    <div class="form-group" data-step="3">
+                        <div class="form-group-header">
+                            <h2>🎓 Formación Académica</h2>
+                            <span class="help-text">Agrega tu educación formal (más reciente primero)</span>
+                        </div>
+                        
+                        <div id="education-container" class="dynamic-container">
+                            <div class="dynamic-item education-item" data-index="0">
+                                <div class="item-header">
+                                    <span class="item-number">1</span>
+                                    <button type="button" class="remove-item-btn hidden" onclick="removeEducationItem(0)">
+                                        <span>×</span>
+                                    </button>
                                 </div>
-                                <div class="input-row">
-                                    <input type="date" class="start-date" placeholder="Fecha de Inicio">
-                                    <input type="date" class="end-date" placeholder="Fecha de Finalización">
-                                    <select class="status">
-                                        <option value="completado">Completado</option>
-                                        <option value="en-curso">En Curso</option>
-                                        <option value="aplazado">Aplazado</option>
-                                    </select>
+                                
+                                <div class="input-grid">
+                                    <div class="input-container">
+                                        <label>Institución</label>
+                                        <input type="text" name="education[0][institution]" 
+                                               placeholder="Ej: Universidad Nacional de Colombia">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Título/Carrera</label>
+                                        <input type="text" name="education[0][degree]" 
+                                               placeholder="Ej: Ingeniería de Sistemas">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Estado</label>
+                                        <select name="education[0][status]" onchange="toggleEndDate(this, 'education', 0)">
+                                            <option value="">Selecciona el estado</option>
+                                            <option value="completado">Completado</option>
+                                            <option value="en-curso">En curso</option>
+                                            <option value="aplazado">Aplazado</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Inicio</label>
+                                        <input type="date" name="education[0][startDate]">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Fin</label>
+                                        <input type="date" name="education[0][endDate]" disabled>
+                                        <small class="help-text">Se habilitará al seleccionar "Completado" o "Aplazado"</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="add-education" class="add-btn">Agregar Formacion</button>
+                        
+                        <button type="button" id="add-education" class="add-item-btn">
+                            <span>+</span> Agregar Formación Académica
+                        </button>
                     </div>
+
                     <!-- Otros Cursos -->
-                    <div class="form-group">
-                        <h2>Otros Cursos y Estudios</h2>
-                        <div id="courses-container">
-                            <div class="course-item">
-                                <div class="input-row">
-                                    <input type="text" , class="course-institution" placeholder="Institución">
-                                    <input type="text" class="course-name" placeholder="Nombre del Curso">
+                    <div class="form-group" data-step="4">
+                        <div class="form-group-header">
+                            <h2>📚 Otros Cursos y Estudios</h2>
+                            <span class="help-text">Certificaciones, cursos, diplomados, etc.</span>
+                        </div>
+                        
+                        <div id="courses-container" class="dynamic-container">
+                            <div class="dynamic-item course-item" data-index="0">
+                                <div class="item-header">
+                                    <span class="item-number">1</span>
+                                    <button type="button" class="remove-item-btn hidden" onclick="removeCourseItem(0)">
+                                        <span>×</span>
+                                    </button>
                                 </div>
-                                <div class="input-row">
-                                    <input type="date" class="course-start-date" placeholder="Fecha de Inicio">
-                                    <input type="date" class="course-end-date" placeholder="Fecha de Finalización">
-                                    <select class="course-status">
-                                        <option value="completado">Completado</option>
-                                        <option value="en-curso">En Curso</option>
-                                        <option value="aplazado">Aplazado</option>
-                                    </select>
+                                
+                                <div class="input-grid">
+                                    <div class="input-container">
+                                        <label>Institución</label>
+                                        <input type="text" name="courses[0][institution]" 
+                                               placeholder="Ej: Platzi, Coursera, SENA">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Nombre del Curso</label>
+                                        <input type="text" name="courses[0][name]" 
+                                               placeholder="Ej: Curso de React.js Avanzado">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Estado</label>
+                                        <select name="courses[0][status]" onchange="toggleEndDate(this, 'courses', 0)">
+                                            <option value="">Selecciona el estado</option>
+                                            <option value="completado">Completado</option>
+                                            <option value="en-curso">En curso</option>
+                                            <option value="aplazado">Aplazado</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Inicio</label>
+                                        <input type="date" name="courses[0][startDate]">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Fin</label>
+                                        <input type="date" name="courses[0][endDate]" disabled>
+                                        <small class="help-text">Se habilitará al seleccionar "Completado" o "Aplazado"</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="add-course" class="add-btn">Agregar Curso</button>
+                        
+                        <button type="button" id="add-course" class="add-item-btn">
+                            <span>+</span> Agregar Curso
+                        </button>
                     </div>
+
                     <!-- Experiencia Laboral -->
-                    <div class="form-group">
-                        <h2>Experiencia Laboral</h2>
-                        <div id="experience-container">
-                            <div class="experience-item">
-                                <div class="input-row">
-                                    <input type="text" class="company" placeholder="Nombre de la Empresa">
-                                    <input type="text" class="position" placeholder="Cargo">
+                    <div class="form-group" data-step="5">
+                        <div class="form-group-header">
+                            <h2>💼 Experiencia Laboral</h2>
+                            <span class="help-text">Tu experiencia profesional (más reciente primero)</span>
+                        </div>
+                        
+                        <div id="experience-container" class="dynamic-container">
+                            <div class="dynamic-item experience-item" data-index="0">
+                                <div class="item-header">
+                                    <span class="item-number">1</span>
+                                    <button type="button" class="remove-item-btn hidden" onclick="removeExperienceItem(0)">
+                                        <span>×</span>
+                                    </button>
                                 </div>
-                                <div class="input-row">
-                                    <input type="date" class="exp-start-date" placeholder="Fecha de Inicio">
-                                    <input type="date" class="exp-end-date" placeholder="Fecha de Finalización">
+                                
+                                <div class="input-grid">
+                                    <div class="input-container">
+                                        <label>Nombre de la Empresa</label>
+                                        <input type="text" name="experience[0][company]" 
+                                               placeholder="Ej: Google Colombia">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Cargo</label>
+                                        <input type="text" name="experience[0][position]" 
+                                               placeholder="Ej: Desarrollador Frontend Senior">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Inicio</label>
+                                        <input type="date" name="experience[0][startDate]">
+                                    </div>
+
+                                    <div class="input-container">
+                                        <label>Fecha de Fin</label>
+                                        <input type="date" name="experience[0][endDate]">
+                                        <small class="help-text">Deja vacío si es tu trabajo actual</small>
+                                    </div>
+
+                                    <div class="input-container span-2">
+                                        <label>Funciones y Logros</label>
+                                        <textarea name="experience[0][functions]" rows="3" maxlength="800"
+                                                  placeholder="Ej: • Desarrollo de aplicaciones web con React.js y Node.js&#10;• Liderazgo de equipo de 5 desarrolladores&#10;• Implementación de metodologías ágiles que mejoraron la productividad en 30%"></textarea>
+                                        <div class="char-counter">
+                                            <span class="char-count">0</span>/800 caracteres
+                                        </div>
+                                    </div>
                                 </div>
-                                <textarea class="functions" placeholder="Funciones y logros principales..."
-                                    rows="3"></textarea>
                             </div>
                         </div>
-                        <button type="button" id="add-experience" class="add-btn">Agregar Experiencia</button>
+                        
+                        <button type="button" id="add-experience" class="add-item-btn">
+                            <span>+</span> Agregar Experiencia Laboral
+                        </button>
                     </div>
+
                     <!-- Firma -->
-                    <div class="form-group">
-                        <h2>Firma (Opcional)</h2>
-                        <input type="file" id="signature" accept="image/*">
-                        <div id="signature-preview"></div>
-                    </div>
-                    <!-- Datos de Identificación -->
-                    <div class="form-group">
-                        <h2>Datos de Identificación</h2>
-                        <div class="input-row">
-                            <select id="docType" required>
-                                <option value="">Tipo de documento</option>
-                                <option value="CC">Cédula de Ciudadanía</option>
-                                <option value="CE">Cédula de Extranjeria</option>
-                                <option value="TI">Tarjeta de Identidad</option>
-                                <option value="PP">Pasaporte</option>
-                            </select>
-                            <input type="text" id="docNumber" placeholder="Número de documento" required>
+                    <div class="form-group" data-step="6">
+                        <div class="form-group-header">
+                            <h2>✍️ Firma (Opcional)</h2>
+                            <span class="help-text">Sube una imagen de tu firma</span>
+                        </div>
+                        
+                        <div class="file-upload-container">
+                            <input type="file" id="signature" name="signature" accept="image/*" class="file-input">
+                            <label for="signature" class="file-upload-label">
+                                <span class="upload-icon">📁</span>
+                                <span class="upload-text">Seleccionar imagen de firma</span>
+                                <span class="upload-hint">PNG, JPG hasta 2MB</span>
+                            </label>
+                            <div id="signature-preview" class="signature-preview"></div>
                         </div>
                     </div>
+
+                    <!-- Datos de Identificación -->
+                    <div class="form-group" data-step="7">
+                        <div class="form-group-header">
+                            <h2>🆔 Datos de Identificación</h2>
+                            <span class="required-indicator">* Campos obligatorios</span>
+                        </div>
+                        
+                        <div class="input-grid">
+                            <div class="input-container">
+                                <label for="docType">Tipo de Documento *</label>
+                                <select id="docType" name="docType" required>
+                                    <option value="">Selecciona el tipo</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="CE">Cédula de Extranjería</option>
+                                    <option value="TI">Tarjeta de Identidad</option>
+                                    <option value="PP">Pasaporte</option>
+                                </select>
+                                <div class="error-message" id="docType-error"></div>
+                            </div>
+
+                            <div class="input-container">
+                                <label for="docNumber">Número de Documento *</label>
+                                <input type="text" id="docNumber" name="docNumber" required 
+                                       placeholder="Ej: 1234567890">
+                                <div class="error-message" id="docNumber-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
                     <div class="form-actions">
-                        <button type="submit" class="generate-btn">Generar Hoja de Vida</button>
-                        <button type="button" id="clear-form" class="clear-btn">Limpiar Formulario</button>
+                        <button type="button" id="clear-form" class="btn btn-secondary">
+                            <span>🗑️</span> Limpiar Todo
+                        </button>
+                        <button type="submit" id="generate-cv" class="btn btn-primary">
+                            <span>🚀</span> Generar Hoja de Vida
+                        </button>
                     </div>
                 </form>
             </section>
-            <!-- Vista previa del CV -->
-             <section id="cv-preview" class="cv-preview hidden">
+
+            <!-- Vista Previa del CV -->
+            <section id="cv-preview" class="cv-preview hidden">
                 <div class="cv-actions">
-                    <button id="edit-cv" class="edit-btn">Editar</button>
-                    <button id="download-cv" class="download-btn">Descargar PDF</button>
-                    <button id="print-cv" class="print-btn">Imprimir</button>
+                    <div class="template-selector">
+                        <label>Plantilla:</label>
+                        <select id="template-selector">
+                            <option value="classic">Clásica</option>
+                            <option value="modern">Moderna</option>
+                            <option value="minimal">Minimalista</option>
+                        </select>
+                    </div>
+                    <button id="edit-cv" class="btn btn-warning">
+                        <span>✏️</span> Editar
+                    </button>
+                    <button id="print-cv" class="btn btn-info">
+                        <span>🖨️</span> Imprimir
+                    </button>
+                    <button id="download-pdf" class="btn btn-success">
+                        <span>📄</span> Descargar PDF
+                    </button>
+                    <button id="download-word" class="btn btn-primary">
+                        <span>📝</span> Descargar Word
+                    </button>
+                    <button id="share-cv" class="btn btn-primary">
+                        <span>🔗</span> Compartir
+                    </button>
                 </div>
+                
                 <div id="cv-content" class="cv-content">
                     <!-- Aquí se generará el CV -->
                 </div>
-             </section>
+            </section>
         </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Generador de CV ATS. Creado para ayudarte a conseguir el trabajo de tus sueños.</p>
+        </footer>
     </div>
+
+    <!-- Modal para importar datos -->
+    <div id="import-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Importar Datos del CV</h3>
+                <button class="modal-close" onclick="closeModal('import-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Selecciona un archivo JSON con tus datos de CV:</p>
+                <input type="file" id="import-file" accept=".json" class="file-input">
+                <label for="import-file" class="file-upload-label">
+                    <span class="upload-icon">📁</span>
+                    <span class="upload-text">Seleccionar archivo JSON</span>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('import-modal')">Cancelar</button>
+                <button id="confirm-import" class="btn btn-primary">Importar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para compartir -->
+    <div id="share-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Compartir CV</h3>
+                <button class="modal-close" onclick="closeModal('share-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Tu CV ha sido guardado temporalmente. Comparte este enlace:</p>
+                <div class="share-link-container">
+                    <input type="text" id="share-link" readonly class="share-link-input">
+                    <button id="copy-link" class="btn btn-primary">Copiar</button>
+                </div>
+                <p class="share-note">⚠️ El enlace expira en 24 horas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications container -->
+    <div id="toast-container" class="toast-container"></div>
+
     <script src="js/script.js"></script>
 </body>
-
 </html>
